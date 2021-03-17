@@ -14,13 +14,27 @@ static mosquitto_plugin_id_t *mosq_pid = NULL;
 static int callback_message(int event, void *event_data, void *userdata)
 {
 	struct mosquitto_evt_message *ed = (mosquitto_evt_message*)event_data;
-	struct mosquitto *client = ed->client;
-	char *id = client->username; // should be id not username, maybe struct is shifted?
 
 	UNUSED(event);
 	UNUSED(userdata);
 
-	printf("client: %s payload: '%.*s'\n", id, ed->payloadlen, (char *)ed->payload);
+	/*
+		For some reason struct obtained with this 'Hack' is shifted.
+		Maybe lib/mosquitto_internal.h -> stuct mosquitto is compiled with different preprocessor ifdefs?
+	*/
+	printf("by-struct id: %s\n", ed->client->id);               // prints IP address
+	printf("by-struct username: %s\n", ed->client->username);	// prints client id
+	printf("by-struct password: %s\n", ed->client->password);	// prints username
+	
+	// workaround: Find base by tria & error:
+	char **base = &ed->client->id;
+
+	printf("by-base address: %s\n", base[0]);
+	printf("by-base id: %s\n", base[1]);
+	printf("by-base username: %s\n", base[2]);
+	printf("by-base password: %s\n", base[3]);
+
+	printf("payload: '%.*s'\n", ed->payloadlen, (char *)ed->payload);
 
 	return MOSQ_ERR_SUCCESS;
 }
