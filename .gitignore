@@ -1,1 +1,4 @@
 /payload_printf.so
+/contrib/node_modules
+/contrib/package-lock.json
+/contrib/package.json
