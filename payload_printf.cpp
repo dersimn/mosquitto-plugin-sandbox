@@ -18,9 +18,9 @@ static int callback_message(int event, void *event_data, void *userdata)
 	char *id = client->username; // should be id not username, maybe struct is shifted?
 
 	UNUSED(event);
-	UNUSED(userdata);
+	char *my_string = (char *)userdata;
 
-	printf("client: %s payload: '%.*s'\n", id, ed->payloadlen, (char *)ed->payload);
+	printf("%s client: %s payload: '%.*s'\n", my_string, id, ed->payloadlen, (char *)ed->payload);
 
 	return MOSQ_ERR_SUCCESS;
 }
@@ -44,7 +44,10 @@ int mosquitto_plugin_init(mosquitto_plugin_id_t *identifier, void **user_data, s
 	UNUSED(opt_count);
 
 	mosq_pid = identifier;
-	return mosquitto_callback_register(mosq_pid, MOSQ_EVT_MESSAGE, callback_message, NULL, NULL);
+
+	char *teststring = "foo bar userdata";
+
+	return mosquitto_callback_register(mosq_pid, MOSQ_EVT_MESSAGE, callback_message, NULL, teststring);
 }
 
 int mosquitto_plugin_cleanup(void *user_data, struct mosquitto_opt *opts, int opt_count)
