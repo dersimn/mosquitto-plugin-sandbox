@@ -5,6 +5,7 @@
 #include "mosquitto_plugin.h"
 #include "mosquitto.h"
 #include "mqtt_protocol.h"
+#include "mosquitto_internal.h"
 
 #define UNUSED(A) (void)(A)
 
@@ -13,11 +14,13 @@ static mosquitto_plugin_id_t *mosq_pid = NULL;
 static int callback_message(int event, void *event_data, void *userdata)
 {
 	struct mosquitto_evt_message *ed = (mosquitto_evt_message*)event_data;
+	struct mosquitto *client = ed->client;
+	char *id = client->username; // should be id not username, maybe struct is shifted?
 
 	UNUSED(event);
 	UNUSED(userdata);
 
-	printf("payload: '%.*s'\n", ed->payloadlen, (char *)ed->payload);
+	printf("client: %s payload: '%.*s'\n", id, ed->payloadlen, (char *)ed->payload);
 
 	return MOSQ_ERR_SUCCESS;
 }
