@@ -8,7 +8,7 @@ all : binary
 
 binary : ${PLUGIN_NAME}.so
 
-${PLUGIN_NAME}.so : ${PLUGIN_NAME}.c
+${PLUGIN_NAME}.so : ${PLUGIN_NAME}.cpp
 	$(CROSS_COMPILE)$(CC) $(PLUGIN_CPPFLAGS) $(PLUGIN_CFLAGS) $(PLUGIN_LDFLAGS) -fPIC -shared $< -o $@
 
 reallyclean : clean
