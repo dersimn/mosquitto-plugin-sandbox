@@ -17,6 +17,8 @@ static int callback_message(int event, void *event_data, void *userdata)
 	UNUSED(event);
 	UNUSED(userdata);
 
+	printf("id: %s\n", ed->id);
+	printf("username: %s\n", ed->username);
 	printf("payload: '%.*s'\n", ed->payloadlen, (char *)ed->payload);
 
 	return MOSQ_ERR_SUCCESS;
