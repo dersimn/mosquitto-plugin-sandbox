@@ -18,22 +18,9 @@ static int callback_message(int event, void *event_data, void *userdata)
 	UNUSED(event);
 	UNUSED(userdata);
 
-	/*
-		For some reason struct obtained with this 'Hack' is shifted.
-		Maybe lib/mosquitto_internal.h -> stuct mosquitto is compiled with different preprocessor ifdefs?
-	*/
-	printf("by-struct id: %s\n", ed->client->id);               // prints IP address
-	printf("by-struct username: %s\n", ed->client->username);	// prints client id
-	printf("by-struct password: %s\n", ed->client->password);	// prints username
-	
-	// workaround: Find base by tria & error:
-	char **base = &ed->client->id;
-
-	printf("by-base address: %s\n", base[0]);
-	printf("by-base id: %s\n", base[1]);
-	printf("by-base username: %s\n", base[2]);
-	printf("by-base password: %s\n", base[3]);
-
+	printf("address: %s\n", mosquitto_client_address(ed->client));
+	printf("id: %s\n", mosquitto_client_id(ed->client));
+	printf("username: %s\n", mosquitto_client_username(ed->client));
 	printf("payload: '%.*s'\n", ed->payloadlen, (char *)ed->payload);
 
 	return MOSQ_ERR_SUCCESS;
